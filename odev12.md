@@ -1,7 +1,7 @@
 ``` SQL 
 1.  SELECT COUNT(*) FROM film
     WHERE length > 
-    (SELECT MAX(length) FROM film);
+    (SELECT AVG(length) FROM film);
 
 2.  SELECT COUNT(*) FROM film
     WHERE rental_rate = 
@@ -10,17 +10,8 @@
 3.  SELECT * FROM film
     WHERE rental_rate = (SELECT MIN(rental_rate) FROM film) AND replacement_cost = (SELECT MIN(replacement_cost) FROM film);
 
-4.  SELECT customer_id, first_name, last_name FROM customer
-    WHERE customer_id = 
-    (
-    SELECT customer_id FROM payment
-    GROUP BY customer_id
-    HAVING  COUNT(customer_id) =
-
-    (
-    SELECT COUNT(customer_id) FROM payment
-    GROUP BY customer_id
-    LIMIT 1
-    )
-
-    );
+4.  SELECT payment.customer_id , customer.first_name ,customer.last_name FROM payment
+    JOIN customer ON payment.customer_id=customer.customer_id
+    GROUP BY payment.customer_id, customer.first_name, customer.last_name
+    ORDER BY COUNT(payment.customer_id);
+    
